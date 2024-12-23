@@ -32,12 +32,13 @@
                                         @endforeach
                                     </td>
                                     <td class="px-6 py-4">
-                                        <x-button-link href="{{ route('tenants.show', $tenant) }}" class="ml-4">View</x-button-link>
                                         <x-button-link href="{{ route('tenants.edit', $tenant) }}" class="ml-4">Edit</x-button-link>
                                         <form action="{{ route('tenants.destroy', $tenant) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-500 hover:text-red-700 ml-4">Delete</button>
+                                            <x-danger-button class="ms-4">
+                                                {{ __('Delete') }}
+                                            </x-danger-button>
                                         </form>
                                     </td>
                                 </tr>

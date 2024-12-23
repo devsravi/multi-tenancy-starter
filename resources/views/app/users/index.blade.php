@@ -1,7 +1,7 @@
 <x-tenant-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Tenants') }} <x-button-link href="{{ route('users.create') }}" class="ml-4 float-right" >Add User</x-button-link>
+            {{ __('Users') }} <x-button-link href="{{ route('users.create') }}" class="ml-4 float-right" >Add User</x-button-link>
         </h2>
     </x-slot>
 
