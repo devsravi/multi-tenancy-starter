@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 use App\Http\Controllers\App\ProfileController;
 use App\Http\Controllers\App\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +38,6 @@ Route::middleware([
         })->name('tenant.dashboard');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('tenant.profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('tenant.profile.update');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('tenant.profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('tenant.profile.destroy');
 
         // Add the following routes for tenant
@@ -43,4 +45,14 @@ Route::middleware([
     });
 
     require __DIR__ . '/tenant-auth.php';
+});
+
+Route::group(['prefix' => config('sanctum.prefix', 'sanctum')], static function () {
+    Route::get('/csrf-cookie/{id}', function ($id) {
+        return User::find($id);
+    })
+        ->middleware([
+            'api',
+            InitializeTenancyByRequestData::class // Use tenancy initialization middleware of your choice
+        ])->name('sanctum.csrf-cookie');
 });
