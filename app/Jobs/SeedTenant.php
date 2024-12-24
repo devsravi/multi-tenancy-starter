@@ -8,6 +8,7 @@ use App\Models\{
 };
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 
 class SeedTenant implements ShouldQueue
 {
@@ -28,12 +29,20 @@ class SeedTenant implements ShouldQueue
     public function handle(): void
     {
         $this->tenant->run(function () {
-            $user = User::create([
-                'name' => $this->tenant->name,
-                'email' => $this->tenant->email,
-                'password' => $this->tenant->password,
-            ]);
-            $user->assignRole('admin');
+            // $user = new User();
+            // dd($this->tenant, $this->tenant->email, tenancy(), $user);
+            $user = User::firstOrCreate(
+                [
+                    'email' => $this->tenant->email,
+                ],
+                [
+                    'name' => $this->tenant->name,
+                    'password' => $this->tenant->password,
+                ]
+            );
+            Log::info('INSIDE TENANT RUN', $user->toArray());
         });
+        Log::info('TENANT INFO', $this->tenant->toArray());
+        Log::info('TENANT USER INFO', $this->tenant->users->toArray());
     }
 }

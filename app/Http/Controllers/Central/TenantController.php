@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
+use App\Models\CentralUser;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -38,10 +39,20 @@ class TenantController extends Controller
             'domain' => 'required|string|max:255|unique:domains,domain',
             'password' => ['required', 'confirmed', Password::defaults()],
         ]);
+        $CentralUser = CentralUser::firstOrCreate(
+            [
+                'email' => $validated['email'],
+            ],
+            [
+                'name' => $validated['name'],
+                'password' => $validated['password'],
+            ]
+        );
         $tenant = Tenant::create($validated);
         $tenant->domains()->create([
             'domain' => $validated['domain'] . '.' . config('app.domain'),
         ]);
+        $CentralUser->tenants()->sync($tenant);
         return redirect()->route('tenants.index')->with('success', 'Tenant created successfully.');
     }
 
