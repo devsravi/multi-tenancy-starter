@@ -14,12 +14,7 @@ class UserController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
-        return [
-            'role_or_permission:Admin',
-            new Middleware('role:Admin', only: ['index']),
-            new Middleware(\Spatie\Permission\Middleware\RoleMiddleware::using('Admin'), except: ['show']),
-            new Middleware(\Spatie\Permission\Middleware\PermissionMiddleware::using('delete records,api'), only: ['destroy']),
-        ];
+        return [];
     }
     /**
      * Display a listing of the resource.
