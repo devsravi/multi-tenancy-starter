@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\App\ProfileController;
 use App\Http\Controllers\App\UserController;
+use App\Http\Middleware\TenantFinderMiddleware;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
@@ -25,13 +26,13 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 
 Route::middleware([
     'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
+    TenantFinderMiddleware::class,
+    PreventAccessFromCentralDomains::class
 ])->group(function () {
     Route::get('/', function () {
         return view('app.welcome');
     });
-
+    require __DIR__ . '/tenant-auth.php';
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', function () {
             return view('app.dashboard');
@@ -43,8 +44,6 @@ Route::middleware([
         // Add the following routes for tenant
         Route::resource('users', UserController::class);
     });
-
-    require __DIR__ . '/tenant-auth.php';
 });
 
 Route::group(['prefix' => config('sanctum.prefix', 'api')], static function () {

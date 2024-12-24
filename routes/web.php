@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::domain(config('app.domain'))->group(function () {
     Route::get('/', function () {
         return view('welcome');
-    });
+    })->name('home');
     Route::middleware(['auth:admin', 'verified'])->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
