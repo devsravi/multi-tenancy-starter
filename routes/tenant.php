@@ -47,7 +47,7 @@ Route::middleware([
     require __DIR__ . '/tenant-auth.php';
 });
 
-Route::group(['prefix' => config('sanctum.prefix', 'sanctum')], static function () {
+Route::group(['prefix' => config('sanctum.prefix', 'api')], static function () {
     Route::get('/csrf-cookie/{id}', function ($id) {
         return User::find($id);
     })

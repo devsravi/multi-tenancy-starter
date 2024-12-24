@@ -9,7 +9,7 @@ Route::domain(config('app.domain'))->group(function () {
     Route::get('/', function () {
         return view('welcome');
     });
-    Route::middleware(['auth', 'verified'])->group(function () {
+    Route::middleware(['auth:admin', 'verified'])->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
         })->name('dashboard');

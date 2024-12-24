@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\CentralUser;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,14 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Super User',
-        //     'email' => 'superuser@superuser.com',
-        //     'password' => static::$password ??= Hash::make('password'),
-        // ]);
-        CentralUser::create([
-            'global_id' => 'laraveltenacy',
+        Admin::create([
             'name' => 'Super User',
             'email' => 'superuser@superuser.com',
             'password' => static::$password ??= Hash::make('password'),
