@@ -7,8 +7,7 @@ use App\Http\Controllers\App\UserController;
 use App\Http\Middleware\TenantFinderMiddleware;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use App\Http\Controllers\App\API\AuthenticationController;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Stancl\Tenancy\Middleware\InitializeTenancyByRequestData;
 
@@ -46,12 +45,16 @@ Route::middleware([
     });
 });
 
-Route::group(['prefix' => config('sanctum.prefix', 'api')], static function () {
-    Route::get('/csrf-cookie/{id}', function ($id) {
-        return User::find($id);
-    })
-        ->middleware([
-            'api',
-            InitializeTenancyByRequestData::class // Use tenancy initialization middleware of your choice
-        ])->name('sanctum.csrf-cookie');
-});
+Route::group(
+    [
+        'prefix' => config('sanctum.prefix', 'api')
+    ],
+    static function () {
+        Route::post('/tenant', [AuthenticationController::class, 'store']);
+        Route::post('/login', [AuthenticationController::class, 'authenticateUser'])
+            ->middleware([
+                'api',
+                InitializeTenancyByRequestData::class // Use tenancy initialization middleware of your choice
+            ]);
+    }
+);
